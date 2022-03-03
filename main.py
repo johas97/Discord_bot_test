@@ -9,22 +9,26 @@ client = discord.Client()
 def get_meme(): 
   response = requests.get("https://meme-api.herokuapp.com/gimme")
   json_data = json.loads(response.text)
-  meme_title = json_data['title']
-  meme_pic = json_data['preview'][-1]
-  print(meme_pic)
+  return json_data
+  
+
+
 
 @client.event 
 async def on_redy () : 
   print('We have logged in as {0.user}'.format(client))
 
 @client.event 
-async def on_message(message): 
-  if message.author == client.user: 
+async def on_message(messege): 
+  if messege.author == client.user: 
     return
 
-  if message.content.startswith('$hello'):
-    await message.channel.send('Hellow!')
+  if messege.content.startswith('summon'):
+    json_data = get_meme()
+    meme_title = json_data['title']
+    meme_pic = json_data['preview'][-1]
+    await messege.channel.send(meme_title)
+    await messege.channel.send(meme_pic)
 
-#client.run(os.environ['bot_token'])
+client.run(os.environ['bot_token'])
 
-get_meme()
