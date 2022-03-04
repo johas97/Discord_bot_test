@@ -3,32 +3,41 @@ import discord
 import requests 
 import json
 from pprint import pprint 
+import meme
+import reactions
+
 client = discord.Client()
-
-
-def get_meme(): 
-  response = requests.get("https://meme-api.herokuapp.com/gimme")
-  json_data = json.loads(response.text)
-  return json_data
   
-
-
-
+  
 @client.event 
-async def on_redy () : 
+async def on_redy(): 
   print('We have logged in as {0.user}'.format(client))
 
-@client.event 
-async def on_message(messege): 
-  if messege.author == client.user: 
-    return
 
-  if messege.content.startswith('summon'):
-    json_data = get_meme()
-    meme_title = json_data['title']
-    meme_pic = json_data['preview'][-1]
-    await messege.channel.send(meme_title)
-    await messege.channel.send(meme_pic)
+@client.event 
+async def on_message(message): 
+  if message.author == client.user: 
+    return
+  messg = message.content
+  #Meme actions
+  
+  if messg.startswith('summon' or 'Summon'):
+    json_data = meme.get_meme()
+    await message.channel.send(json_data['title'])
+    await message.channel.send(json_data['preview'][-1])
+  #Tagging actions
+
+  
+  if  messg.startswith('tag' or 'Tag'): 
+    messg_arr = messg.split(' ', 3) 
+    emoji_id = messg_arr[3]
+    user_id = messg_arr[1]
+
+    
+
+#  if (message.author in sus_list) 
+    
+    
 
 client.run(os.environ['bot_token'])
 
