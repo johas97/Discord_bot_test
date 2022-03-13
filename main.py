@@ -35,9 +35,14 @@ async def on_message(message):
     user_id = messg_arr[1]
     reactions.add_to_taglist(user_id, emoji_id)
 
-  print(reactions.is_tagged(message.author))
+  if  messg.startswith('untag' or 'Untag'): 
+    messg_arr = messg.split(' ', 3) 
+    emoji_id = messg_arr[3]
+    user_id = messg_arr[1]
+    reactions.remove_from_taglist(user_id, emoji_id)
+
   if reactions.is_tagged(message.author):
-    reactions.execute_reactions(message.author)
+   await reactions.execute_reactions(message.author, message)
     
 
     
